@@ -126,7 +126,7 @@
 	    isNormalUser = true;
 	    description = "ben";
 	    extraGroups = [ "networkmanager" "wheel" ];
-	    hashedPassword = "$6$RTgFw3ECvQmIUoHD$dCbRwNkzp5rTNApQmTSf2nF8r1AZWDq.oN01.Z2NhohaJ/NQgkmeTGBLE8DKDThDDPS5uRvh5OBAmbL2x8wOl0";
+	    passwordFile = /home/ben/passwordfile;
 	    packages = with pkgs; [
 	    #pkgs.lowPrio spotify
 	    #(pkgs.lowPrio discord)
