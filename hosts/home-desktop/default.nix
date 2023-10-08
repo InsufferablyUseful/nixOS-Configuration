@@ -2,7 +2,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, ... }:
+{ config, pkgs,lib,inputs, ... }:
 
 {
   imports =
@@ -126,7 +126,8 @@
 	    isNormalUser = true;
 	    description = "ben";
 	    extraGroups = [ "networkmanager" "wheel" ];
-	    passwordFile = /home/ben/passwordfile;
+	    hashedPasswordFile= config.age.secrets.password.path;
+	    #hashedPassword = "$6$qsEx5ECQpWkyGsHw$eiHWb8lLcCssHK9OYmHCoIyHgiZQadrNE.aOmx6Ons7Am0NK71anP9hT.vSp2456yV0Jrolq8y4cN95jc/vsw/";
 	    packages = with pkgs; [
 	    #pkgs.lowPrio spotify
 	    #(pkgs.lowPrio discord)
@@ -226,11 +227,38 @@ fileSystems."/run/media/ben/LinuxGamingPrimary" =
   { device = "/dev/disk/by-uuid/6a8b09df-4658-48fa-859f-315c0eea3994";
     options = ["nofail"];
   };
+  
+  age = {
+  secrets.password = {
+  file = ./secrets/password.age;
+  owner = "ben";
+  group = "users";
+  };
+  };
+  
+ 
 
 
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
+  services.openssh = {
+  enable = true;
+  # require public key authentication for better security
+  settings.PasswordAuthentication = false;
+  settings.KbdInteractiveAuthentication = false;
+  hostKeys = [
+  {
+    comment = "Used for local agenix management";
+    path = "/etc/ssh/ssh_host_ed25519_key";
+    rounds = 100;
+    type = "ed25519";
+  }
+];
+  #settings.PermitRootLogin = "yes";
+};
+
+
   # services.openssh.enable = true;
 
   # Open ports in the firewall.

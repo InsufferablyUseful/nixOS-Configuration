@@ -17,10 +17,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
+    agenix.url = "github:ryantm/agenix";
+    
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
- outputs = { self, nixpkgs, home-manager, ... }@inputs:
+ outputs = { self, nixpkgs, home-manager,agenix, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -57,12 +59,12 @@
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
       nixosConfigurations = {
-        # FIXME replace with your hostname
         home-desktop = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main nixos configuration file <
             ./hosts/home-desktop
+            agenix.nixosModules.default
           ];
         };
       };
